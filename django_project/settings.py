@@ -81,7 +81,11 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': 'blogdb_7g7d',
+        'USER': 'user',
+        'PASSWORD': 'PPIlJWt4m63cmZ6qw7n6lBx3H1rUPTeF',
+        'HOST': 'dpg-cs7nc8bv2p9s73f624v0-a.oregon-postgres.render.com',
+        'PORT': '5432'
     }
 }
 
@@ -120,7 +124,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 # Default primary key field type
