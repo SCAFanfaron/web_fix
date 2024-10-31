@@ -69,3 +69,33 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 def about(request):
     return render(request, 'blog/about.html', {'title': 'About '})
+
+from django.shortcuts import get_object_or_404, redirect
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from .models import Post, Comment
+from .forms import CommentForm
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
+
+# Ваши уже существующие представления...
+
+class PostDetailView(DetailView):
+    model = Post
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.get_object()
+        context['comments'] = post.comments.all()
+        context['form'] = CommentForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        post = self.get_object()
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            return redirect('post-detail', pk=post.pk)
+        return self.get(request, *args, **kwargs)

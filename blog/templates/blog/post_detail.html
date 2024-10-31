@@ -1,7 +1,7 @@
 {% extends "blog/base.html" %}
 {% block content %}
   <article class="media content-section">
-    <img calss="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
+    <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
     <div class="media-body">
       <div class="article-metadata">
         <a class="mr-2" href="#">{{ object.author }}</a>
@@ -17,5 +17,35 @@
       <p class="article-content">{{ object.content }}</p>
     </div>
   </article>
-    
+
+  <!-- Comments Section -->
+  <section class="content-section">
+    <h3>Comments</h3>
+    {% for comment in comments %}
+      <div class="media mt-3">
+        <img class="rounded-circle article-img" src="{{ comment.author.profile.image.url }}" alt="User image">
+        <div class="media-body">
+          <h5 class="mt-0">{{ comment.author }}</h5>
+          <small class="text-muted">{{ comment.created_at|date:"F d, Y H:i" }}</small>
+          <p>{{ comment.content }}</p>
+        </div>
+      </div>
+    {% empty %}
+      <p>No comments yet.</p>
+    {% endfor %}
+  </section>
+
+  <!-- Comment Form -->
+  {% if user.is_authenticated %}
+    <section class="content-section">
+      <h3>Add a comment</h3>
+      <form method="post" class="mb-3">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Post Comment</button>
+      </form>
+    </section>
+  {% else %}
+    <p>Please <a href="{% url 'login' %}">log in</a> to add a comment.</p>
+  {% endif %}
 {% endblock content %}
